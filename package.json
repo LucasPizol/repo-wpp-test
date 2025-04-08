@@ -1,0 +1,12 @@
+{
+  "name": "repo-wpp-test",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/LucasPizol/repo-wpp-test",
+  "author": "Lucas Pizol <lucas.pizol@webgoal.com.br>",
+  "license": "MIT",
+  "dependencies": {
+    "qrcode-terminal": "^0.12.0",
+    "whatsapp-web.js": "^1.27.0"
+  }
+}
