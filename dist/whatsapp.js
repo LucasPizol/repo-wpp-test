@@ -19,20 +19,21 @@ const whatsapp_web_js_1 = require("whatsapp-web.js");
 const message_cache_1 = require("./message-cache");
 const message_file_handler_1 = require("./message-file-handler");
 const message_handler_1 = require("./message-handler");
+const express_1 = __importDefault(require("express"));
 const args = [
-    '--no-sandbox',
-    '--disable-setuid-sandbox',
-    '--disable-dev-shm-usage',
-    '--disable-accelerated-2d-canvas',
-    '--no-first-run',
-    '--disable-gpu',
-    '--no-zygote',
-    '--single-process',
+    "--no-sandbox",
+    "--disable-setuid-sandbox",
+    "--disable-dev-shm-usage",
+    "--disable-accelerated-2d-canvas",
+    "--no-first-run",
+    "--disable-gpu",
+    "--no-zygote",
+    "--single-process",
 ];
 const cache = new message_cache_1.WhatsappMessageCache();
 const authStrategy = new whatsapp_web_js_1.LocalAuth({
-    clientId: 'whatsapp',
-    dataPath: node_path_1.default.join(__dirname, '../../../../wwebjs_cache'),
+    clientId: "whatsapp",
+    dataPath: node_path_1.default.join(__dirname, "../../../../wwebjs_cache"),
 });
 exports.client = new whatsapp_web_js_1.Client({
     puppeteer: { headless: true, args },
@@ -41,21 +42,21 @@ exports.client = new whatsapp_web_js_1.Client({
 class Whatsapp {
     setupWhatsapp() {
         if (!exports.client)
-            throw new Error('Error initializing WhatsApp client');
-        exports.client.on('qr', (qr) => {
-            this.log('QRCODE GERADO COM SUCESSO');
+            throw new Error("Error initializing WhatsApp client");
+        exports.client.on("qr", (qr) => {
+            this.log("QRCODE GERADO COM SUCESSO");
             qrcode_terminal_1.default.generate(qr, { small: true });
         });
-        exports.client.on('ready', () => {
-            this.log('WHATSAPP CONECTADO COM SUCESSO');
+        exports.client.on("ready", () => {
+            this.log("WHATSAPP CONECTADO COM SUCESSO");
         });
-        exports.client.on('authenticated', () => {
-            console.log('Authenticated');
+        exports.client.on("authenticated", () => {
+            console.log("Authenticated");
         });
-        exports.client.on('auth_failure', (msg) => {
-            console.error('AUTHENTICATION FAILURE', msg);
+        exports.client.on("auth_failure", (msg) => {
+            console.error("AUTHENTICATION FAILURE", msg);
         });
-        exports.client.on('message', (msg) => __awaiter(this, void 0, void 0, function* () {
+        exports.client.on("message", (msg) => __awaiter(this, void 0, void 0, function* () {
             try {
                 const hasMedia = msg.hasMedia;
                 cache.setMessageCache(msg);
@@ -69,18 +70,22 @@ class Whatsapp {
             }
             catch (error) {
                 if (error instanceof Error) {
-                    console.error('[WHATSAPP ERROR]', error.message);
+                    console.error("[WHATSAPP ERROR]", error.message);
                 }
             }
         }));
-        this.log('INICIANDO CONEXÃO COM O WHATSAPP');
+        this.log("INICIANDO CONEXÃO COM O WHATSAPP");
         exports.client.initialize();
     }
     log(message) {
-        console.info('====================================');
+        console.info("====================================");
         console.info(message);
-        console.info('====================================');
+        console.info("====================================");
     }
 }
 exports.Whatsapp = Whatsapp;
+const app = (0, express_1.default)();
 new Whatsapp().setupWhatsapp();
+app.listen(3000, () => {
+    console.log("Server is running on port 3000");
+});
